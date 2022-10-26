@@ -2,16 +2,13 @@
 
 use serde_derive::Deserialize;
 use wasm_bindgen::prelude::*;
+use web_sys::HtmlInputElement as InputElement;
 use yew::html;
 use yew::prelude::*;
-use yew_router::{components::RouterAnchor, router::Router, Switch};
 
 mod todo;
 
-pub type Anchor = RouterAnchor<AppRoute>;
-
 struct TodoApp {
-    link: ComponentLink<Self>,
     todos: Vec<Todo>,
     next_todo: String,
 }
@@ -19,12 +16,6 @@ struct TodoApp {
 enum Msg {
     MakeReq,
     Update(String),
-}
-
-#[derive(Switch, Clone, Debug)]
-pub enum AppRoute {
-    #[to = "/"]
-    Home,
 }
 
 #[derive(Deserialize, Clone, PartialEq, Debug)]
@@ -36,10 +27,8 @@ pub struct Todo {
 impl Component for TodoApp {
     type Message = Msg;
     type Properties = ();
-    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        link.send_message(Msg::MakeReq);
+    fn create(_ctx: &Context<Self>) -> Self {
         Self {
-            link,
             todos: vec![
                 {
                     Todo {
@@ -61,7 +50,7 @@ impl Component for TodoApp {
         }
     }
 
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::MakeReq => {
                 if !self.next_todo.is_empty() {
@@ -81,53 +70,48 @@ impl Component for TodoApp {
         true
     }
 
-    fn change(&mut self, _props: Self::Properties) -> ShouldRender {
-        false
-    }
-
-    fn view(&self) -> Html {
+    fn view(&self, ctx: &Context<Self>) -> Html {
         let todos = self.todos.clone();
-        let cb = self.link.callback(|_| Msg::MakeReq);
-        let on_input_change = self
-            .link
-            .callback(|event: InputData| Msg::Update(event.value));
+        let cb = ctx.link().callback(|_| Msg::MakeReq);
         let next_todo = self.next_todo.clone();
 
+        let oninput = ctx.link().callback(|e: InputEvent| {
+            let input: InputElement = e.target_unchecked_into();
+            Msg::Update(input.value())
+        });
+
         html! {
-            <main>
-                <section>
-                    <Router<AppRoute, ()>
-                        render = Router::render(move |switch: AppRoute| {
-                            match switch {
-                                AppRoute::Home => {
-                                    html! {
-                                        <div>
-                                            <todo::list::List todos=todos.clone()/>
-                                        </div>
-                                    }
-                                }
-                            }
-                        })
-                    />
-                    <input
-                        type="text"
-                        oninput=on_input_change.clone()
-                        value=next_todo.clone()
-                    />
-                    <button onclick=cb.clone()>
-                        { "Add" }
-                    </button>
-                </section>
-            </main>
-        }
+            <div>
+                <h1>{"Client side rendering with vite and preact"}</h1>
+              <main>
+                  <section>
+                      <div>
+                          <todo::list::List todos={todos.clone()}/>
+                      </div>
+                      <input
+                          type="text"
+                          value={next_todo.clone()}
+                          oninput={oninput}
+                      />
+                      <button onclick={cb.clone()}>
+                          { "Add" }
+                      </button>
+                  </section>
+              </main>
+            </div>
+          }
     }
 
-    fn rendered(&mut self, _first_render: bool) {}
+    fn changed(&mut self, _ctx: &Context<Self>) -> bool {
+        true
+    }
 
-    fn destroy(&mut self) {}
+    fn rendered(&mut self, _ctx: &Context<Self>, _first_render: bool) {}
+
+    fn destroy(&mut self, _ctx: &Context<Self>) {}
 }
 
 #[wasm_bindgen(start)]
 pub fn run_app() {
-    App::<TodoApp>::new().mount_to_body();
+    yew::start_app::<TodoApp>();
 }
