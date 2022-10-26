@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&amp;display=swap"
+      rel="stylesheet"
+    />
+    <title>Wasm - Yew and Rust</title>
+
+    <style>
+      :root {
+        --dark-blue: #046659;
+        --light-blue: #06c4aa;
+        --light-purple: #a4bebb;
+        --dark-purple: #455352;
+      }
+
+      body {
+        background-color: #fafafa;
+        font-family: "Poppins", ui-sans-serif, system-ui, -apple-system,
+          BlinkMacSystemFont, sans-serif;
+        padding: 20px 20px 40px 20px;
+      }
+
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0px 0px 130px -50px var(--light-purple);
+        overflow: hidden;
+      }
+
+      h1,
+      h2 {
+        margin: 0 0 24px 0;
+      }
+
+      section {
+        padding: 20px;
+        border-bottom: 10px solid var(--dark-blue);
+      }
+
+      ul {
+        list-style-type: none;
+        margin: 5px 0 30px 0;
+        padding-left: 25px;
+      }
+
+      li {
+        padding: 5px 0;
+      }
+
+      label {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        user-select: none;
+        border: 2px;
+      }
+
+      /* Hide the browser's default checkbox */
+      label input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+
+      .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+        border-radius: 2px;
+      }
+
+      /* On mouse-over, add a grey background color */
+      label:hover input ~ .checkmark {
+        background-color: #ccc;
+      }
+
+      /* When the checkbox is checked, add a blue background */
+      label input:checked ~ .checkmark {
+        background-color: var(--dark-blue);
+      }
+
+      /* Create the checkmark/indicator (hidden when not checked) */
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+
+      /* Show the checkmark when checked */
+      label input:checked ~ .checkmark:after {
+        display: block;
+      }
+
+      /* Style the checkmark/indicator */
+      label .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        transform: rotate(45deg);
+      }
+
+      input[type="text"] {
+        border-radius: 4px;
+        margin: 8px 0;
+        outline: none;
+        border: none;
+        padding: 8px;
+        margin-inline-end: 16px;
+        box-sizing: border-box;
+        transition: 0.3s;
+        box-shadow: 0 0 0 2px rgb(180, 180, 180);
+      }
+
+      input[type="text"]:focus {
+        box-shadow: 0 0 0 2px var(--dark-blue);
+      }
+
+      button {
+        border: solid 2px transparent;
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0),
+            rgba(255, 255, 255, 0)
+          ),
+          linear-gradient(90deg, var(--dark-blue) 0%, var(--light-blue) 100%);
+        background-origin: border-box;
+        background-clip: content-box, border-box;
+        box-shadow: 2px 1000px 1px white inset;
+        color: var(--dark-blue);
+        padding: 8px;
+        cursor: pointer;
+        margin-block: 16px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 14px;
+        width: 100px;
+        transition: 75ms ease-in-out box-shadow;
+      }
+
+      button:focus {
+        outline: none;
+      }
+      button:hover {
+        box-shadow: 2px 1000px 1px rgba(255, 255, 255, 0.9) inset;
+      }
+
+      button:active {
+        box-shadow: 2px 1000px 1px rgba(255, 255, 255, 0.8) inset;
+      }
+    </style>
+  </head>
+  <body></body>
+</html>

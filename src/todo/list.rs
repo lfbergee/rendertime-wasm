@@ -1,0 +1,67 @@
+use super::super::{Todo};
+use yew::prelude::*;
+
+#[derive(Properties, Clone, PartialEq)]
+pub struct Props {
+    pub todos: Option<Vec<Todo>>,
+}
+
+pub struct List {
+    props: Props,
+}
+
+impl List {
+    fn render_list(&self, todos: &Option<Vec<Todo>>) -> Html {
+        if let Some(t) = todos {
+            html! {
+                <ul>
+                    { t.iter().map(|todo| self.view_todo(todo)).collect::<Html>() }
+                </ul>
+            }
+        } else {
+            html! {
+                <div class=classes!("loading")>{"loading..."}</div>
+            }
+        }
+    }
+
+    fn view_todo(&self, todo: &Todo) -> Html {
+        html! {
+            <li>
+                <label>
+                    <input type="checkbox"  />
+                    <span class=classes!("checkmark")></span>
+                    { &todo.title }
+                </label>
+            </li>
+        }
+    }
+}
+
+pub enum Msg {}
+
+impl Component for List {
+    type Properties = Props;
+    type Message = Msg;
+
+    fn create(props: Self::Properties, _link: ComponentLink<Self>) -> Self {
+        Self { props }
+    }
+
+    fn view(&self) -> Html {
+        html! {
+            <div>
+                { self.render_list(&self.props.todos)}
+            </div>
+        }
+    }
+
+    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
+        true
+    }
+
+    fn change(&mut self, props: Self::Properties) -> ShouldRender {
+        self.props = props;
+        true
+    }
+}
